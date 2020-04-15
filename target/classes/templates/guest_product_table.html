@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title>Product Table</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta content="The site was developed by student Balaian Vardan" name="description">
+    <meta content="en" http-equiv="content-language">
+    <meta content="Vardan Balaian" name="author">
+    <meta content="copyright held by Balaian Vardan" name="copyright">
+
+
+    <link type="text/css" rel="stylesheet" th:href="@{/css/element_styles.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/text_styles.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/hover_styles.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/modal_style.css}">
+
+    <script type="text/javascript" th:src="@{/js/offer_form_validation.js}"></script>
+    <script type="text/javascript" th:src="@{/js/elements_change.js}"></script>
+</head>
+
+<body>
+
+<h1 class="site_name_decor">Online MarketPlace</h1>
+
+<a class="navigation_link" th:href="@{/}">Homepage</a>
+
+<div class="content">
+
+    <div class="logout_form">
+        <th:block sec:authorize="isAnonymous()">
+            <span class="user_name_display">Guest</span>
+            <a class="logout_link" th:href="@{/login}">Log in as a User</a>
+        </th:block>
+    </div>
+
+    <table>
+
+        <caption class="legend_text">Auction table</caption>
+
+        <thead>
+
+        <tr>
+
+            <th colspan="2"></th>
+
+            <th colspan="1">
+
+                <form th:action="@{/guest_product_table}" method="get" style="border-left: #333333 2px solid; border-right: #333333 2px solid; border-radius: 20px; padding: 1%" >
+
+                    <input class="search_input" id="filter" name="filter" placeholder="Product name" title="Enter product name to search" type="text" th:value="${filter}" />
+
+                    <button class="search_button" type="submit">Search</button>
+
+                </form>
+
+            </th>
+        </tr>
+
+        <tr>
+
+            <th class="cell_header" style="width: 2%">
+                ID
+            </th>
+
+            <th class="cell_header" style="width: 13%">
+                Sale
+            </th>
+
+            <th class="cell_header" style="width: 32%">
+                Description
+            </th>
+
+            <th class="cell_header" style="width: 12%">
+                Salesman
+            </th>
+
+            <th class="cell_header" style="width: 6%">
+                Starting price
+            </th>
+
+            <th class="cell_header" style="width: 7%">
+                Offer end date
+            </th>
+
+            <th class="cell_header" style="width: 8%">
+                Best offer
+            </th>
+
+            <th class="cell_header" style="width: 12%">
+                Bidder
+            </th>
+
+            <th class="cell_header" style="width: 10%">
+                Status
+            </th>
+
+        </tr>
+        </thead>
+
+        <tfoot>
+        <tr>
+            <th class="cell_header" colspan="9"><span th:utext="${productNumber}"></span> Publications</th>
+        </tr>
+        </tfoot>
+
+        <tbody>
+
+        <th:block th:each ="product : ${products}">
+            <tr class="cell_separator">
+
+                <th:block th:if="${product.productBidding.status.title.equals('At auction')}">
+
+                <td class="cell_header" th:utext="${product.id}"></td>
+                <td class="cell" th:utext="${product.title}"></td>
+                <td class="cell" th:utext="${product.description}"></td>
+                <td class="cell" th:utext="${product.productOwner.loginName}"></td>
+                <td class="cell" ><span th:utext="${product.productBidding.startingPrice}"></span> $</td>
+                <td class="cell" th:utext="${product.productBidding.offerEndDate}"></td>
+                <td class="cell"><span th:utext="${product.productBidding.bestOffer}"></span> $</td>
+
+                <th:block th:if="${product.productBidding.supposedBidder == null}">
+                    <td class="cell" th:text="_"></td>
+                </th:block>
+                <th:block th:if="${product.productBidding.supposedBidder != null}">
+                    <td class="cell" th:utext="${product.productBidding.supposedBidder.fullName}"></td>
+                </th:block>
+
+                <td class="cell cell_text_align" th:utext="${product.productBidding.status.title}"></td>
+
+                </th:block>
+
+                <th:block th:if="${product.productBidding.status.title.equals('Sold')}">
+
+                    <td class="cell_header" th:utext="${product.id}"></td>
+                    <td class="sold_cell" th:utext="${product.title}"></td>
+                    <td class="sold_cell" th:utext="${product.description}"></td>
+                    <td class="sold_cell" th:utext="${product.productOwner.loginName}"></td>
+                    <td class="sold_cell" ><span th:utext="${product.productBidding.startingPrice}"></span> $</td>
+                    <td class="sold_cell" th:utext="${product.productBidding.offerEndDate}"></td>
+                    <td class="sold_cell"><span th:utext="${product.productBidding.bestOffer}"></span> $</td>
+
+                    <th:block th:if="${product.productBidding.supposedBidder == null}">
+                        <td class="sold_cell" th:text="_"></td>
+                    </th:block>
+                    <th:block th:if="${product.productBidding.supposedBidder != null}">
+                        <td class="sold_cell" th:utext="${product.productBidding.supposedBidder.fullName}"></td>
+                    </th:block>
+
+                    <td class="sold_cell cell_text_align" th:utext="${product.productBidding.status.title}"></td>
+
+                </th:block>
+
+            </tr>
+        </th:block>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<footer class="footer"><p class="footer_text">Developed by student Balaian Vardan Ⓢ 2020</p>
+</footer>
+
+</body>
+</html>

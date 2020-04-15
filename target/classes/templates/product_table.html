@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="https://www.thymeleaf.org">
+
+<head>
+  <title>Product Table</title>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+  <meta content="The site was developed by student Balaian Vardan" name="description">
+  <meta content="en" http-equiv="content-language">
+  <meta content="Vardan Balaian" name="author">
+  <meta content="copyright held by Balaian Vardan" name="copyright">
+
+  <link rel="stylesheet" th:href="@{/css/element_styles.css}" type="text/css">
+  <link rel="stylesheet" th:href="@{/css/text_styles.css}" type="text/css">
+  <link rel="stylesheet" th:href="@{/css/hover_styles.css}" type="text/css">
+  <link rel="stylesheet" th:href="@{/css/modal_style.css}" type="text/css">
+
+  <script th:src="@{/js/offer_form_validation.js}" type="text/javascript"></script>
+  <script th:src="@{/js/elements_change.js}" type="text/javascript"></script>
+</head>
+
+<body>
+
+<h1 class="site_name_decor">Online MarketPlace</h1>
+
+<a class="navigation_link" th:href="@{/}">Homepage</a>
+
+<div class="content">
+
+  <div class="logout_form">
+    <th:block sec:authorize="isAuthenticated()">
+      <span class="user_name_display" sec:authentication="name"></span>
+      <form method="post" th:action="@{/logout}">
+        <input class="logout_link" type="submit" value="Sign Out"/>
+      </form>
+    </th:block>
+  </div>
+
+  <table class="offer_table">
+
+    <caption class="legend_text">Auction table</caption>
+
+    <thead>
+
+    <tr>
+      <th colspan="2">
+        <a class="my_item_link" th:href="@{/user_products}">My bidding</a>
+      </th>
+
+      <th colspan="1">
+
+        <form method="get" style="border-left: #333333 2px solid; border-right: #333333 2px solid; border-radius: 20px; padding: 1%"
+              th:action="@{/product_table}">
+
+          <input class="search_input" id="filter" name="filter" placeholder="Product name"
+                 th:value="${filter}" title="Enter product name to search" type="text"/>
+
+          <button class="search_button" type="submit">Search</button>
+
+        </form>
+
+      </th>
+    </tr>
+
+
+    <tr>
+      <th colspan="9">
+        <span class="error_form" th:utext="${priceErrorMessage}"></span>
+        <span class="error_form" th:utext="${ownerOfferErrorMessage}"></span>
+      </th>
+    </tr>
+
+
+    <tr>
+
+      <th class="cell_header" style="width: 1%">
+        ID
+      </th>
+
+      <th class="cell_header" style="width: 13%">
+        Sale
+      </th>
+
+      <th class="cell_header" style="width: 30%">
+        Description
+      </th>
+
+      <th class="cell_header" style="width: 12%">
+        Salesman
+      </th>
+
+      <th class="cell_header" style="width: 8%">
+        Starting price
+      </th>
+
+      <th class="cell_header" style="width: 7%">
+        Offer end date
+      </th>
+
+      <th class="cell_header" style="width: 8%">
+        Best offer
+      </th>
+
+      <th class="cell_header" style="width: 12%">
+        Bidder
+      </th>
+
+
+      <th class="cell_header" style="width: 12%">
+        My offer
+      </th>
+
+    </tr>
+    </thead>
+
+    <tfoot>
+    <tr>
+      <th class="cell_header" colspan="9"><span th:utext="${productNumber}"></span> Publications
+      </th>
+    </tr>
+    </tfoot>
+
+    <tbody>
+
+    <th:block th:each="product : ${products}">
+      <tr class="cell_separator">
+
+        <th:block th:if="${product.productBidding.status.title.equals('At auction')}">
+
+        <td class="cell_header" th:utext="${product.id}"></td>
+        <td class="cell" th:utext="${product.title}"></td>
+        <td class="cell" th:utext="${product.description}"></td>
+        <td class="cell" th:utext="${product.productOwner.loginName}"></td>
+        <td class="cell"><span th:utext="${product.productBidding.startingPrice}"></span> $</td>
+        <td class="cell" th:utext="${product.productBidding.offerEndDate}"></td>
+        <td class="cell"><span th:utext="${product.productBidding.bestOffer}"></span> $</td>
+
+        <th:block th:if="${product.productBidding.supposedBidder == null}">
+          <td class="cell" th:text="_"></td>
+        </th:block>
+        <th:block th:if="${product.productBidding.supposedBidder != null}">
+          <td class="cell" th:utext="${product.productBidding.supposedBidder.fullName}"></td>
+        </th:block>
+
+        <td>
+
+          <form class="offer_form" autocomplete="off" method="post" th:action="@{/product_table}">
+
+            <input class="offer_input" id="offer" maxlength="7" minlength="1"
+                   name="offer"
+                   placeholder="Offer price"
+                   required
+                   title="Enter the amount in the format: 999(.99)"
+                   type="text"/><span class="cell_header">$</span>
+
+            <input name="productIdOfThisOffer" th:value="${product.id}" type="hidden">
+            <button class="offer_button" id="dataSendButton" name="productIdOfThisOffer" type="submit">Bid</button>
+
+          </form>
+
+        </td>
+
+        </th:block>
+
+        <th:block th:if="${product.productBidding.status.title.equals('Sold')}">
+
+          <td class="cell_header" th:utext="${product.id}"></td>
+          <td class="sold_cell" th:utext="${product.title}"></td>
+          <td class="sold_cell" th:utext="${product.description}"></td>
+          <td class="sold_cell" th:utext="${product.productOwner.loginName}"></td>
+          <td class="sold_cell"><span th:utext="${product.productBidding.startingPrice}"></span> $</td>
+          <td class="sold_cell" th:utext="${product.productBidding.offerEndDate}"></td>
+          <td class="sold_cell"><span th:utext="${product.productBidding.bestOffer}"></span> $</td>
+
+          <th:block th:if="${product.productBidding.supposedBidder == null}">
+            <td class="sold_cell" th:text="_"></td>
+          </th:block>
+          <th:block th:if="${product.productBidding.supposedBidder != null}">
+            <td class="sold_cell" th:utext="${product.productBidding.supposedBidder.fullName}"></td>
+          </th:block>
+
+          <td class="sold_cell cell_text_align" th:utext="${product.productBidding.status.title}"></td>
+
+        </th:block>
+
+      </tr>
+
+    </th:block>
+
+    </tbody>
+
+  </table>
+
+</div>
+
+<footer class="footer"><p class="footer_text">Developed by student Balaian Vardan Ⓢ 2020</p>
+</footer>
+
+<!-- The Modal -->
+<div class="modal" id="wrongFillingModal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p id="wrongMessage">There are errors in filling out the form.</p>
+
+
+    <div class="modal-footer">
+      <button class="registration-button" id="exitButton" type="button">Exit</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal" id="warningModal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p id="warningMessage">Are you sure you want to make a bid of: <span
+        id="enteredOffer"></span></p>
+
+    <div class="modal-footer">
+      <button class="registration-button" id="confirmButton" type="button">OK</button>
+      <button class="registration-button" id="negativeButton" type="button">Cancel</button>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
