@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
@@ -15,6 +16,7 @@ import org.springframework.security.core.GrantedAuthority;
  */
 @Entity
 @Table(name = "role", schema = "marketplace")
+@Data
 public class Role implements GrantedAuthority {
 
   @Id
@@ -24,28 +26,6 @@ public class Role implements GrantedAuthority {
 
   @Column(name = "title", nullable = false)
   private String title;
-
-  public Role() {}
-
-  public Role(String title) {
-    this.title = title;
-  }
-
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
-  }
 
   @Override
   public String getAuthority() {

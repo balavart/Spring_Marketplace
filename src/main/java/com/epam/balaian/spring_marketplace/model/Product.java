@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import lombok.Data;
 
 /**
  * @author Vardan Balaian
@@ -16,6 +17,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "product", schema = "marketplace")
+@Data
 public class Product {
 
   @Id
@@ -36,46 +38,4 @@ public class Product {
   @ManyToOne
   @JoinColumn(name = "bidding_id", nullable = false)
   private Bidding productBidding;
-
-  public Product() {}
-
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public User getProductOwner() {
-    return productOwner;
-  }
-
-  public void setProductOwner(User productOwner) {
-    this.productOwner = productOwner;
-  }
-
-  public Bidding getProductBidding() {
-    return productBidding;
-  }
-
-  public void setProductBidding(Bidding productBidding) {
-    this.productBidding = productBidding;
-  }
 }

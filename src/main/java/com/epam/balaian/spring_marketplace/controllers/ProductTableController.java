@@ -75,14 +75,14 @@ public class ProductTableController {
       HttpServletRequest request) {
 
     Product existingProduct = productService.getById(productIdOfThisOffer);
-    Double existingStartingprice = existingProduct.getProductBidding().getStartingPrice();
+    Double existingStartingPrice = existingProduct.getProductBidding().getStartingPrice();
     Double existingOffer = existingProduct.getProductBidding().getBestOffer();
 
     Integer supposedBidderId = loggedUser.getId();
     Integer productOwnerId = existingProduct.getProductOwner().getId();
 
     if (Objects.nonNull(existingOffer)
-        && (offer <= existingOffer || offer <= existingStartingprice)) {
+        && (offer <= existingOffer || offer <= existingStartingPrice)) {
       request.getSession().setAttribute("priceErrorMessage", true);
 
       return "redirect:/product_table";

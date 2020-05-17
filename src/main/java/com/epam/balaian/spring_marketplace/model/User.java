@@ -10,6 +10,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -20,6 +24,9 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 @Entity
 @Table(name = "user", schema = "marketplace")
+@Data
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class User implements UserDetails {
 
   @Id
@@ -28,109 +35,33 @@ public class User implements UserDetails {
   private Integer id;
 
   @Column(name = "login_name", nullable = false)
+  @NonNull
   private String loginName;
 
   @Column(name = "password", nullable = false)
+  @NonNull
   private String password;
 
   @Column(name = "full_name", nullable = false)
+  @NonNull
   private String fullName;
 
   @Column(name = "city", nullable = false)
+  @NonNull
   private String city;
 
   @Column(name = "email", nullable = false)
+  @NonNull
   private String email;
 
   @Column(name = "phone_number", nullable = false)
+  @NonNull
   private String phoneNumber;
 
-  @ManyToOne /*(fetch = FetchType.EAGER, cascade = CascadeType.ALL)*/
+  @ManyToOne
   @JoinColumn(name = "role_id", nullable = false)
+  @NonNull
   private Role role;
-
-  public User() {}
-
-  public User(
-      String loginName,
-      String password,
-      String fullName,
-      String city,
-      String email,
-      String phoneNumber,
-      Role role) {
-    this.loginName = loginName;
-    this.password = password;
-    this.fullName = fullName;
-    this.city = city;
-    this.email = email;
-    this.phoneNumber = phoneNumber;
-    this.role = role;
-  }
-
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public String getLoginName() {
-    return loginName;
-  }
-
-  public void setLoginName(String loginName) {
-    this.loginName = loginName;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-  public String getFullName() {
-    return fullName;
-  }
-
-  public void setFullName(String fullName) {
-    this.fullName = fullName;
-  }
-
-  public String getCity() {
-    return city;
-  }
-
-  public void setCity(String city) {
-    this.city = city;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getPhoneNumber() {
-    return phoneNumber;
-  }
-
-  public void setPhoneNumber(String phoneNumber) {
-    this.phoneNumber = phoneNumber;
-  }
-
-  public Role getRole() {
-    return role;
-  }
-
-  public void setRole(Role role) {
-    this.role = role;
-  }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
