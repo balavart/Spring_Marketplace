@@ -16,7 +16,6 @@ import org.springframework.lang.Nullable;
  * @created 13.02.2020
  * @since 1.8
  */
-/*@Data*/
 @Entity
 @Table(name = "bidding", schema = "marketplace")
 public class Bidding {
